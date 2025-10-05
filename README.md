@@ -6,9 +6,9 @@ A lightweight, Arch Linux-optimized Electron wrapper for Grok which turns the we
 
 
 
-## 🛠️ Installation
+# 🛠️ Installation
 
-# 1. Clone the repo:
+## 1. Clone the repo:
 
    ```
    git clone [https://[github.com/yourusername/grok-desktop-electron.git](https://github.com/aminedeesucre/Grok-LLM-Electron.git)
@@ -16,13 +16,13 @@ A lightweight, Arch Linux-optimized Electron wrapper for Grok which turns the we
    ```
 
 
-# 2. Install dependencies:
+## 2. Install dependencies:
 
    ```
    sudo pacman -Syu nodejs npm base-devel git  # Arch essentials
    ```
 
-# 3. Install Electron Dependencies
+## 3. Install Electron Dependencies
 
    ```
    npm install electron --save-dev
@@ -33,19 +33,19 @@ A lightweight, Arch Linux-optimized Electron wrapper for Grok which turns the we
    electron-builder: Packages your app into distributables (AppImage for Linux portability—runs anywhere without install fuss).
 
 
-# 4. Build the AppImage:
+## 4. Build the AppImage:
 
    ```
    npm run build
    ```
    - Outputs to `dist/Grok Desktop-1.0.0.AppImage`. Copy AppImage file to `~/Apps/grok-desktop.AppImage` for permanence.
 
-## 🚀 Usage
+# 🚀 Usage
 
 - Launch: `./grok-desktop.AppImage` (or pin via KDE menu/Desktop).
 - Sign in with your X account—chat, generate images, or voice-mode banter awaits.
 
-## For KDE integration
+# For KDE integration
 
 - Create `~/.local/share/applications/grok-desktop.desktop` (see [example](desktop.example)).
 - Pin to taskbar: Launch > right-click icon > "Pin to Task Manager."
