@@ -48,4 +48,10 @@ A lightweight, Arch Linux-optimized Electron wrapper for Grok which turns the we
 # For KDE integration
 
 - Create `~/.local/share/applications/grok-desktop.desktop` (see [example]([grok-desktop.desktop](https://github.com/aminedeesucre/Grok-LLM-Electron/blob/main/grok-desktop.desktop))).
+- Input following commands
+```
+desktop-file-validate ~/.local/share/applications/grok-desktop.desktop
+update-desktop-database ~/.local/share/applications/
+```
+
 - Pin to taskbar: Launch > right-click icon > "Pin to Task Manager."
