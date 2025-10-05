@@ -3,6 +3,9 @@
 A lightweight, Arch Linux-optimized Electron wrapper for Grok which turns the web app into a native-feeling desktop.
 
 
+
+
+
 ## 🛠️ Installation
 
 # 1. Clone the repo:
