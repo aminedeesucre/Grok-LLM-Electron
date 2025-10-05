@@ -17,10 +17,9 @@ A lightweight, Arch Linux-optimized Electron wrapper for Grok which turns the we
 
    ```
    sudo pacman -Syu nodejs npm base-devel git  # Arch essentials
-
    ```
 
-# 3. Install Electron and Builder
+# 3. Install Electron Dependencies
 
    ```
    npm install electron --save-dev
@@ -36,7 +35,7 @@ A lightweight, Arch Linux-optimized Electron wrapper for Grok which turns the we
    ```
    npm run build
    ```
-   - Outputs to `dist/Grok Desktop-1.0.0.AppImage`. Copy to `~/Apps/grok-desktop.AppImage` for permanence.
+   - Outputs to `dist/Grok Desktop-1.0.0.AppImage`. Copy AppImage file to `~/Apps/grok-desktop.AppImage` for permanence.
 
 ## 🚀 Usage
 
