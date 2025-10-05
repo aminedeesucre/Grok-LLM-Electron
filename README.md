@@ -4,19 +4,34 @@ A lightweight, Arch Linux-optimized Electron wrapper for Grok which turns the we
 
 
 ## 🛠️ Installation
+
 # 1. Clone the repo:
 
    ```
-   git clone https://github.com/yourusername/grok-desktop-electron.git
-   cd grok-desktop-electron
+   git clone [https://[github.com/yourusername/grok-desktop-electron.git](https://github.com/aminedeesucre/Grok-LLM-Electron.git)
+   cd Grok-LLM-Electron
    ```
+
+
 # 2. Install dependencies:
 
    ```
    sudo pacman -Syu nodejs npm base-devel git  # Arch essentials
-   npm install
+
    ```
-# 3. Build the AppImage:
+
+# 3. Install Electron and Builder
+
+   ```
+   npm install electron --save-dev
+   npm install electron-builder --save-dev
+   ```
+
+   electron: The core engine.
+   electron-builder: Packages your app into distributables (AppImage for Linux portability—runs anywhere without install fuss).
+
+
+# 4. Build the AppImage:
 
    ```
    npm run build
