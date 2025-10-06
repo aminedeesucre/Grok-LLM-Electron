@@ -11,7 +11,7 @@ A lightweight, Arch Linux-optimized Electron wrapper for Grok which turns the we
 ## 1. Clone the repo:
 
    ```
-   git clone [https://[github.com/yourusername/grok-desktop-electron.git](https://github.com/aminedeesucre/Grok-LLM-Electron.git)
+   git clone https://github.com/aminedeesucre/Grok-LLM-Electron.git
    cd Grok-LLM-Electron
    ```
 
@@ -47,7 +47,7 @@ A lightweight, Arch Linux-optimized Electron wrapper for Grok which turns the we
 
 # For KDE integration
 
-- Create `~/.local/share/applications/grok-desktop.desktop` (see [example]([grok-desktop.desktop](https://github.com/aminedeesucre/Grok-LLM-Electron/blob/main/grok-desktop.desktop))).
+- Create `~/.local/share/applications/grok-desktop.desktop` see [grok-desktop.desktop].
 - Input following commands
 ```
 desktop-file-validate ~/.local/share/applications/grok-desktop.desktop
