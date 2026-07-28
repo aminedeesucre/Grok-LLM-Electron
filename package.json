@@ -1,31 +1,38 @@
 {
-  "name": "grok-desktop",
-  "version": "1.0.0",
-  "description": "Grok, now with desktop swagger",
+  "name": "webapp-forge",
+  "version": "2.0.0",
+  "description": "Turn any website into a desktop web app and pin it to your taskbar",
   "main": "main.js",
   "scripts": {
     "start": "electron .",
-    "build": "electron-builder"
+    "build": "electron-builder",
+    "test": "node --test \"test/*.test.js\"",
+    "test:e2e": "xvfb-run -a electron test/e2e --no-sandbox --use-fake-device-for-media-stream",
+    "test:all": "npm test && npm run test:e2e"
   },
-  "author": "Your Name <you@example.com>",
+  "author": "aminedeesucre",
   "license": "MIT",
   "devDependencies": {
     "electron": "^38.2.1",
     "electron-builder": "^26.0.12"
   },
-"build": {
-  "appId": "com.yourname.grok-desktop",
-  "productName": "GrokDesktop",
-  "directories": {
-    "output": "dist"
-  },
-  "files": [
-    "**/*"
-  ],
-  "linux": {
-    "target": "AppImage",
-    "category": "Utility",
-    "icon": "iconx.png"
+  "build": {
+    "appId": "io.github.aminedeesucre.webapp-forge",
+    "productName": "WebAppForge",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "main.js",
+      "preload.js",
+      "src/**",
+      "ui/**",
+      "assets/**"
+    ],
+    "linux": {
+      "target": "AppImage",
+      "category": "Utility",
+      "icon": "assets/icon.png"
+    }
   }
-}
 }
