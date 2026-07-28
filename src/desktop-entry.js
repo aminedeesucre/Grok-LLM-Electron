@@ -39,14 +39,19 @@ function isPinned(id) {
   return fs.existsSync(desktopFilePath(id));
 }
 
+// A newline in a value would end the key and let the rest be parsed as its
+// own directive (including another Exec=), so collapse control characters.
+const desktopValue = (v) => String(v).replace(/[\r\n\t\f\v\0]+/g, ' ');
+
 function pin(webApp) {
   fs.mkdirSync(applicationsDir(), { recursive: true });
+  const name = desktopValue(webApp.name);
   const content = [
     '[Desktop Entry]',
-    `Name=${webApp.name}`,
-    `Comment=${webApp.name} — web app (WebApp Forge)`,
+    `Name=${name}`,
+    `Comment=${name} — web app (WebApp Forge)`,
     `Exec=${execCommand(webApp.id)}`,
-    `Icon=${webApp.icon || defaultIcon()}`,
+    `Icon=${desktopValue(webApp.icon || defaultIcon())}`,
     'Terminal=false',
     'Type=Application',
     'Categories=Network;',

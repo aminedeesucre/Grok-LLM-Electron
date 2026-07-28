@@ -65,6 +65,8 @@ function registerIpc(win) {
   });
 
   handle('apps:remove', (id) => {
+    // Check first: unpin/removeIcon build filesystem paths out of the id.
+    if (!store.getApp(id)) throw new Error('App not found');
     desktopEntry.unpin(id);
     icons.removeIcon(id);
     store.removeApp(id);
@@ -84,9 +86,10 @@ function registerIpc(win) {
   });
 
   handle('apps:unpin', (id) => {
-    desktopEntry.unpin(id);
     const app = store.getApp(id);
-    return { app: app ? withPinned(app) : null };
+    if (!app) throw new Error('App not found');
+    desktopEntry.unpin(id);
+    return { app: withPinned(app) };
   });
 
   handle('apps:refresh-icon', async (id) => {
