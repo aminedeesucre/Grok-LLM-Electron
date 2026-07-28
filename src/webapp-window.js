@@ -117,19 +117,37 @@ function open(id) {
 
   // Electron grants permissions by default; a site-specific browser wrapping
   // arbitrary sites should ask before handing over camera, mic, or location.
+  const SENSITIVE = ['media', 'geolocation', 'midiSysex', 'hid', 'serial', 'usb'];
+  // Answered once per permission per run: a call app asks on every join, and
+  // re-prompting each time would train the user to click Allow blindly.
+  const decisions = new Map();
+
   win.webContents.session.setPermissionRequestHandler((_wc, permission, callback) => {
-    const sensitive = ['media', 'geolocation', 'midiSysex', 'hid', 'serial', 'usb'];
-    if (!sensitive.includes(permission)) return callback(true);
-    const choice = dialog.showMessageBoxSync(win, {
-      type: 'question',
-      buttons: ['Deny', 'Allow'],
-      defaultId: 0,
-      cancelId: 0,
-      title: conf.name,
-      message: `Allow ${conf.name} to use ${permission}?`,
-      detail: conf.url,
-    });
-    callback(choice === 1);
+    if (!SENSITIVE.includes(permission)) return callback(true);
+    if (decisions.has(permission)) return callback(decisions.get(permission));
+    dialog
+      .showMessageBox(win, {
+        type: 'question',
+        buttons: ['Deny', 'Allow'],
+        defaultId: 0,
+        cancelId: 0,
+        title: conf.name,
+        message: `Allow ${conf.name} to use ${permission}?`,
+        detail: conf.url,
+      })
+      .then(({ response }) => {
+        decisions.set(permission, response === 1);
+        callback(response === 1);
+      })
+      .catch(() => callback(false));
+  });
+
+  // Synchronous checks (permissions.query, autoplay probes) must agree with
+  // what was actually decided, and never report a sensitive permission as
+  // pre-granted before the user has been asked.
+  win.webContents.session.setPermissionCheckHandler((_wc, permission) => {
+    if (!SENSITIVE.includes(permission)) return true;
+    return decisions.get(permission) === true;
   });
 
   win.on('close', () => {
