@@ -1,38 +1,24 @@
-const { app, BrowserWindow } = require('electron');
+const { app } = require('electron');
 const path = require('path');
 
-let mainWindow;
+// Stable name so userData (config, icons, sessions) lives in one place
+// no matter which mode we start in.
+app.setName('webapp-forge');
 
-function createWindow() {
-  const mainWindow = new BrowserWindow({
-    width: 1400,
-    height: 900,
-    webPreferences: {
-      nodeIntegration: false,  // Security first—no Node in renderer
-      contextIsolation: true,
-      preload: path.join(__dirname, 'preload.js')  // Optional bridge if needed later
-    },
-    icon: path.join(__dirname, 'iconx.png'),  // Grab a Grok logo PNG and drop it here
-    titleBarStyle: 'hiddenInset',  // Sleek macOS-ish title (or 'default' for classic)
-    autoHideMenuBar: true  // Clean look
-  });
+const appArg = process.argv.find((a) => a.startsWith('--app='));
+const appId = appArg ? appArg.slice('--app='.length) : null;
 
-  mainWindow.loadURL('https://grok.com');  // Straight to the source—official and secure
-
-  // Dev tools? Uncomment for debugging:
-  // mainWindow.webContents.openDevTools();
-
-  mainWindow.on('closed', () => { 
-	  mainWindow = null; 
-  });
-}
-
-app.whenReady().then(createWindow);
-
-app.on('window-all-closed', () => {
-  if (process.platform !== 'darwin') app.quit();
+app.whenReady().then(() => {
+  if (appId) {
+    // Launched as a specific web app (from the manager or a .desktop entry).
+    require(path.join(__dirname, 'src', 'webapp-window')).open(appId);
+  } else {
+    require(path.join(__dirname, 'src', 'manager')).open();
+  }
 });
 
-app.on('activate', () => {
-  if (BrowserWindow.getAllWindows().length === 0) createWindow();
+app.on('window-all-closed', () => {
+  // Every web app runs as its own process, so quitting on last-window-closed
+  // is the right behavior in both modes (including macOS).
+  app.quit();
 });
