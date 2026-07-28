@@ -3,6 +3,7 @@
   "version": "2.0.0",
   "description": "Turn any website into a desktop web app and pin it to your taskbar",
   "main": "main.js",
+  "desktopName": "webapp-forge.desktop",
   "scripts": {
     "start": "electron .",
     "build": "electron-builder",
@@ -12,9 +13,19 @@
   },
   "author": "aminedeesucre",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aminedeesucre/WebApp-Forge.git"
+  },
   "devDependencies": {
     "electron": "^43.2.0",
     "electron-builder": "^26.0.12"
+  },
+  "comments": {
+    "overrides": "electron-builder pulls @electron/node-gyp straight from GitHub. npm 12 refuses git dependencies by default (allow-git=none), so a plain install fails with EALLOWGIT. The same package is published to the registry, so point at that instead of asking everyone to disable the protection. It is only used to rebuild native modules, of which this project has none."
+  },
+  "overrides": {
+    "@electron/node-gyp": "10.2.0-electron.2"
   },
   "build": {
     "appId": "io.github.aminedeesucre.webapp-forge",
@@ -29,10 +40,13 @@
       "ui/**",
       "assets/**"
     ],
+    "publish": null,
     "linux": {
       "target": "AppImage",
       "category": "Utility",
-      "icon": "assets/icon.png"
+      "icon": "assets/icon.png",
+      "synopsis": "Turn any website into a desktop app",
+      "syncDesktopName": true
     }
   }
 }
