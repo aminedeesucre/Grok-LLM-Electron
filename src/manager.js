@@ -5,22 +5,7 @@ const icons = require('./icons');
 const desktopEntry = require('./desktop-entry');
 const launcher = require('./launcher');
 
-function normalizeUrl(input) {
-  let url = String(input || '').trim();
-  if (!url) throw new Error('URL is required');
-  if (!/^[a-z][a-z0-9+.-]*:\/\//i.test(url)) url = `https://${url}`;
-  const parsed = new URL(url); // throws on garbage
-  if (!['http:', 'https:'].includes(parsed.protocol)) {
-    throw new Error('Only http(s) URLs are supported');
-  }
-  return parsed.toString();
-}
-
-function nameFromUrl(url) {
-  const host = new URL(url).hostname.replace(/^www\./, '');
-  const label = host.split('.')[0];
-  return label.charAt(0).toUpperCase() + label.slice(1);
-}
+const { normalizeUrl, nameFromUrl } = require('./url-policy');
 
 function withPinned(app) {
   return { ...app, pinned: desktopEntry.isPinned(app.id) };

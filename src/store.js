@@ -2,6 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
 const { app } = require('electron');
+const { slugify } = require('./url-policy');
 
 const storeFile = () => path.join(app.getPath('userData'), 'webapps.json');
 
@@ -26,15 +27,6 @@ function listApps() {
 
 function getApp(id) {
   return listApps().find((a) => a.id === id) || null;
-}
-
-function slugify(name) {
-  const slug = String(name)
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-+|-+$/g, '')
-    .slice(0, 32);
-  return slug || 'webapp';
 }
 
 function newId(name) {

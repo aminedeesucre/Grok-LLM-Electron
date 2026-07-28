@@ -4,11 +4,17 @@ const path = require('path');
 const { execFile } = require('child_process');
 const { app } = require('electron');
 const { defaultIcon } = require('./icons');
+const { desktopValue, isValidId } = require('./url-policy');
 
 const applicationsDir = () => path.join(os.homedir(), '.local', 'share', 'applications');
 
-const desktopFileName = (id) => `webapp-forge-${id}.desktop`;
+const desktopFileName = (id) => `webapp-forge-${assertId(id)}.desktop`;
 const desktopFilePath = (id) => path.join(applicationsDir(), desktopFileName(id));
+
+function assertId(id) {
+  if (!isValidId(id)) throw new Error(`Refusing to build a path from id "${id}"`);
+  return id;
+}
 
 // Also used as the X11 WM_CLASS (via Chromium's --class switch) and the
 // Wayland app_id (via app.setDesktopName), so the taskbar can match running
@@ -38,10 +44,6 @@ function execCommand(id) {
 function isPinned(id) {
   return fs.existsSync(desktopFilePath(id));
 }
-
-// A newline in a value would end the key and let the rest be parsed as its
-// own directive (including another Exec=), so collapse control characters.
-const desktopValue = (v) => String(v).replace(/[\r\n\t\f\v\0]+/g, ' ');
 
 function pin(webApp) {
   fs.mkdirSync(applicationsDir(), { recursive: true });

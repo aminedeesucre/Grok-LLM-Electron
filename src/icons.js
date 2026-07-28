@@ -1,8 +1,15 @@
 const fs = require('fs');
 const path = require('path');
 const { app, net } = require('electron');
+const { isValidId } = require('./url-policy');
 
 const iconsDir = () => path.join(app.getPath('userData'), 'icons');
+
+// Icon filenames are built from the id, so it never reaches a path unchecked.
+function iconPath(id, ext) {
+  if (!isValidId(id)) throw new Error(`Refusing to build a path from id "${id}"`);
+  return path.join(iconsDir(), `${id}.${ext}`);
+}
 
 const defaultIcon = () => path.join(__dirname, '..', 'assets', 'icon.png');
 
@@ -30,8 +37,8 @@ async function fetchIcon(siteUrl, id) {
       if (type.includes('text/html')) continue; // soft-404 pages
       const buf = Buffer.from(await res.arrayBuffer());
       if (buf.length < 100) continue;
+      const file = iconPath(id, ext);
       fs.mkdirSync(iconsDir(), { recursive: true });
-      const file = path.join(iconsDir(), `${id}.${ext}`);
       removeIcon(id); // drop any stale icon with another extension
       fs.writeFileSync(file, buf);
       return file;
@@ -42,20 +49,22 @@ async function fetchIcon(siteUrl, id) {
   return null;
 }
 
+const ICON_EXTS = ['png', 'ico', 'jpg', 'jpeg', 'svg'];
+
 function setCustomIcon(id, sourcePath) {
-  const ext = path.extname(sourcePath).slice(1).toLowerCase() || 'png';
+  const picked = path.extname(sourcePath).slice(1).toLowerCase();
+  const ext = ICON_EXTS.includes(picked) ? picked : 'png';
+  const file = iconPath(id, ext);
   fs.mkdirSync(iconsDir(), { recursive: true });
-  const file = path.join(iconsDir(), `${id}.${ext}`);
   removeIcon(id);
   fs.copyFileSync(sourcePath, file);
   return file;
 }
 
 function removeIcon(id) {
-  for (const ext of ['png', 'ico', 'jpg', 'jpeg', 'svg']) {
-    const file = path.join(iconsDir(), `${id}.${ext}`);
+  for (const ext of ICON_EXTS) {
     try {
-      fs.unlinkSync(file);
+      fs.unlinkSync(iconPath(id, ext));
     } catch {
       // didn't exist
     }

@@ -5,7 +5,10 @@
   "main": "main.js",
   "scripts": {
     "start": "electron .",
-    "build": "electron-builder"
+    "build": "electron-builder",
+    "test": "node --test \"test/*.test.js\"",
+    "test:e2e": "xvfb-run -a electron test/e2e --no-sandbox --use-fake-device-for-media-stream",
+    "test:all": "npm test && npm run test:e2e"
   },
   "author": "aminedeesucre",
   "license": "MIT",
