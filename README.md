@@ -4,6 +4,9 @@ Turn **any website** into a native-feeling desktop app — and pin it to your ta
 
 Grew out of a single-purpose Grok wrapper; now it forges unlimited web apps. Paste a URL, get an app. Arch Linux / KDE optimized, but works on any Linux desktop.
 
+> Formerly `Grok-LLM-Electron`. If you cloned it under the old name, point your remote at the new one:
+> `git remote set-url origin https://github.com/aminedeesucre/WebApp-Forge.git`
+
 ---
 
 ## Contents
@@ -38,8 +41,8 @@ Grew out of a single-purpose Grok wrapper; now it forges unlimited web apps. Pas
 ### 1. Clone the repo
 
 ```bash
-git clone https://github.com/aminedeesucre/Grok-LLM-Electron.git
-cd Grok-LLM-Electron
+git clone https://github.com/aminedeesucre/WebApp-Forge.git
+cd WebApp-Forge
 ```
 
 ### 2. Install dependencies
