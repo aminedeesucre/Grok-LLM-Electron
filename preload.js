@@ -10,4 +10,6 @@ contextBridge.exposeInMainWorld('forge', {
   unpin: (id) => ipcRenderer.invoke('apps:unpin', id),
   refreshIcon: (id) => ipcRenderer.invoke('apps:refresh-icon', id),
   chooseIcon: (id) => ipcRenderer.invoke('apps:choose-icon', id),
+  pinManager: () => ipcRenderer.invoke('manager:pin'),
+  unpinManager: () => ipcRenderer.invoke('manager:unpin'),
 });

@@ -22,7 +22,20 @@ function registerIpc(win) {
     });
   };
 
-  handle('apps:list', () => ({ apps: store.listApps().map(withPinned) }));
+  handle('apps:list', () => ({
+    apps: store.listApps().map(withPinned),
+    managerPinned: desktopEntry.isManagerPinned(),
+  }));
+
+  handle('manager:pin', () => ({
+    path: desktopEntry.pinManager(),
+    managerPinned: true,
+  }));
+
+  handle('manager:unpin', () => {
+    desktopEntry.unpinManager();
+    return { managerPinned: false };
+  });
 
   handle('apps:add', async ({ name, url }) => {
     const normalized = normalizeUrl(url);

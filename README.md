@@ -64,7 +64,7 @@ npm start
 
 ## 🚀 Usage
 
-1. Launch the manager (`npm start`).
+1. Launch the manager (`npm start`). Click **Add to app menu** once, top right, and you can open it from your launcher from then on — no terminal needed.
 2. Paste a URL (e.g. `grok.com`) — or click one of the quick-add chips (Grok, ChatGPT, Claude, YouTube, WhatsApp, Gmail, Notion, GitHub). The scheme is optional; `grok.com` becomes `https://grok.com/`.
 3. **Launch** opens the app in its own window and its own process.
 4. **Pin** adds it to your application menu. Then open your launcher, right-click the app, and choose **"Pin to Task Manager"**. It's now on your taskbar with the site's icon.
@@ -72,6 +72,8 @@ npm start
 6. **Delete** removes the app, its menu entry, and its icon.
 
 Renaming or re-iconing a **pinned** app rewrites its `.desktop` entry automatically.
+
+You only need the manager when adding or changing apps — pinned apps launch straight from the taskbar, with no manager and no terminal in the loop.
 
 ---
 
