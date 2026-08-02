@@ -26,19 +26,17 @@ function quoteExec(arg) {
   return `"${arg.replace(/(["`$\\])/g, '\\$1')}"`;
 }
 
-// The command that relaunches this very install in web-app mode.
+// How to relaunch this very install, however it was started.
+function launchCommand() {
+  if (process.env.APPIMAGE) return [quoteExec(process.env.APPIMAGE)];
+  if (app.isPackaged) return [quoteExec(process.execPath)];
+  // Dev install: electron binary + project dir.
+  return [quoteExec(process.execPath), quoteExec(app.getAppPath())];
+}
+
+// The command that relaunches this install in web-app mode.
 function execCommand(id) {
-  const parts = [];
-  if (process.env.APPIMAGE) {
-    parts.push(quoteExec(process.env.APPIMAGE));
-  } else if (app.isPackaged) {
-    parts.push(quoteExec(process.execPath));
-  } else {
-    // Dev install: electron binary + project dir.
-    parts.push(quoteExec(process.execPath), quoteExec(app.getAppPath()));
-  }
-  parts.push(`--app=${id}`, `--class=${wmClass(id)}`);
-  return parts.join(' ');
+  return [...launchCommand(), `--app=${id}`, `--class=${wmClass(id)}`].join(' ');
 }
 
 function isPinned(id) {
@@ -76,10 +74,60 @@ function unpin(id) {
   }
 }
 
+// The manager itself. Without this the only way to open it from a source
+// checkout is `npm start` from a terminal. The name matches package.json's
+// desktopName so a packaged build and a source install agree on one entry.
+const MANAGER_FILE = 'webapp-forge.desktop';
+const MANAGER_WM_CLASS = 'webapp-forge';
+const managerFilePath = () => path.join(applicationsDir(), MANAGER_FILE);
+
+function isManagerPinned() {
+  return fs.existsSync(managerFilePath());
+}
+
+function pinManager() {
+  fs.mkdirSync(applicationsDir(), { recursive: true });
+  const content = [
+    '[Desktop Entry]',
+    'Name=WebApp Forge',
+    'Comment=Turn any website into a desktop app',
+    `Exec=${[...launchCommand(), `--class=${MANAGER_WM_CLASS}`].join(' ')}`,
+    `Icon=${desktopValue(defaultIcon())}`,
+    'Terminal=false',
+    'Type=Application',
+    'Categories=Utility;',
+    'StartupNotify=true',
+    `StartupWMClass=${MANAGER_WM_CLASS}`,
+    '',
+  ].join('\n');
+  fs.writeFileSync(managerFilePath(), content, { mode: 0o755 });
+  refreshDatabase();
+  return managerFilePath();
+}
+
+function unpinManager() {
+  try {
+    fs.unlinkSync(managerFilePath());
+    refreshDatabase();
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 function refreshDatabase() {
   // Best effort — KDE picks up new .desktop files on its own, but this
   // speeds it up where the tool exists.
   execFile('update-desktop-database', [applicationsDir()], () => {});
 }
 
-module.exports = { pin, unpin, isPinned, wmClass, desktopFileName };
+module.exports = {
+  pin,
+  unpin,
+  isPinned,
+  wmClass,
+  desktopFileName,
+  pinManager,
+  unpinManager,
+  isManagerPinned,
+};

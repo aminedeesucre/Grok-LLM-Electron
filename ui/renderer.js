@@ -11,6 +11,7 @@ const SUGGESTIONS = [
 
 let apps = [];
 let editingId = null;
+let managerPinned = false;
 
 const $ = (id) => document.getElementById(id);
 
@@ -134,7 +135,24 @@ async function refresh() {
   const res = await forge.list();
   if (!res.ok) return fail(res);
   apps = res.apps;
+  managerPinned = res.managerPinned;
   render();
+  renderManagerPin();
+}
+
+// Without a menu entry, the only way to reopen the manager from a source
+// checkout is `npm start` in a terminal.
+function renderManagerPin() {
+  const btn = $('manager-pin');
+  btn.textContent = managerPinned ? 'In your app menu ✓' : 'Add to app menu';
+  btn.onclick = async () => {
+    const res = managerPinned ? await forge.unpinManager() : await forge.pinManager();
+    if (!res.ok) return fail(res);
+    if (!managerPinned) {
+      toast('WebApp Forge added to your app menu — you can launch it without a terminal now.', 6000);
+    }
+    await refresh();
+  };
 }
 
 async function addApp(url, name) {
